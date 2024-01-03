@@ -9,4 +9,4 @@ public class SecondaryController {
     private void switchToPrimary() throws IOException {
         App.setRoot("primary");
     }
-} // test test
+}
