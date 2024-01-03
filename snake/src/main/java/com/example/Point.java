@@ -13,6 +13,6 @@ public class Point {
 
     public void getPos() {
 
-    }
+    } //test
 
 }
