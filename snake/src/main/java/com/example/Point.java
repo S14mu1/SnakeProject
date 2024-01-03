@@ -11,8 +11,28 @@ public class Point {
         this.y = y;
     }
 
-    public void getPos() {
+    public double getXPos() {
+        return x;
+    }
 
-    } //test
+    public double getYPos() {
+        return y;
+    }
+
+    public void setXPos(double x) {
+        this.x = x;
+    }
+
+    public void setYPos(double y) {
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 
 }
