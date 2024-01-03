@@ -15,7 +15,12 @@ public class TestSnakeController {
     private static final int COLUMMS = ROWS;
     private static final int SQUARE_SIZE = WIDTH / ROWS;
 
+    private static final int Right = 0;
+    private static final int Left = 1;
+    private static final int UP = 2;
+    private static final int DOWN = 3;
 
+    
 
 
 
