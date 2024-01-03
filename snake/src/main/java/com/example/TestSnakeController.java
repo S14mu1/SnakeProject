@@ -2,11 +2,11 @@ package com.example;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
-import javafx.aplication.Aplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.application.Application;
 
 public class TestSnakeController {
     private static final int WIDTH = 640;
