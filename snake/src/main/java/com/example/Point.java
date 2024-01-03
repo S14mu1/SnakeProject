@@ -33,6 +33,6 @@ public class Point {
                 "x=" + x +
                 ", y=" + y +
                 '}';
-    }
+    }//test
 
 }
