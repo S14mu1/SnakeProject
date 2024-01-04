@@ -68,6 +68,13 @@ public class PrimaryController {
         return food.intersects(s.getBoundsInLocal());
     }
 
+    private boolean gameover(){
+        if (s.selfCollide()) {
+            return true; 
+        }
+        return false;
+    }
+
     // --- STARTUP --- //
     @FXML
     private void run() {
@@ -93,12 +100,17 @@ public class PrimaryController {
 
     // --- THE GAME LOOP --- //
     @FXML
-    public void move() {
+    public void move() throws IOException {
         s.step();
         adjustLocation();
         if (hit()) {
             s.eat(food);
             newFood();
+
+        }
+        if (gameover()) {
+            App.setRoot("secondary");
+            
         }
     }
 
@@ -107,7 +119,7 @@ public class PrimaryController {
      * directions: 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
      */
     @FXML
-    void moveSquareKeyPressed(KeyEvent event) {
+    void moveSquareKeyPressed(KeyEvent event) throws IOException {
         if (event.getCode().equals(KeyCode.W) && direction != 1) {
             direction = 0;
             s.setCurrentDirection(0);
