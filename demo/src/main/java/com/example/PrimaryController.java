@@ -88,17 +88,20 @@ public class PrimaryController {
 
     @FXML
     void moveSquareKeyPressed(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.W)) {
+        if (event.getCode().equals(KeyCode.W )&& direction!=1) {
+            direction =0;
             s.setCurrentDirection(0);
             move();
-        } else if (event.getCode().equals(KeyCode.S)) {
-            ;
+        } else if (event.getCode().equals(KeyCode.S)&& direction!=0) {
+            direction =1;
             s.setCurrentDirection(1);
             move();
-        } else if (event.getCode().equals(KeyCode.A)) {
+        } else if (event.getCode().equals(KeyCode.A)&& direction!=3) {
+            direction =2;
             s.setCurrentDirection(2);
             move();
-        } else if (event.getCode().equals(KeyCode.D)) {
+        } else if (event.getCode().equals(KeyCode.D)&& direction!=2) {
+            direction =3;
             s.setCurrentDirection(3);
             move();
         }
