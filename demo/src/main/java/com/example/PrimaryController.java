@@ -55,6 +55,8 @@ public class PrimaryController {
         aPane.getChildren().add(food);
     }
 
+    // --- CHECKERS --- //
+
     private boolean isFoodOnSnake(double x, double y) {
         for (Circle segment : s.getSnakeBody()) {
             if (segment.intersects(x, y, App.size, App.size)) {
