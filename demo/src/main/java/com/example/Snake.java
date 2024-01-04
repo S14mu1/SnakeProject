@@ -6,12 +6,14 @@ import java.util.*;
 
 public class Snake extends Circle {
 
+    // --- VARIABLES --- //
     private ArrayList<Circle> snakeBody;
     private int length = 0;
     private static final int STEP = App.size;
     private int currentDirection;
     private Point pos;
 
+    // --- CONSTRUCTOR USES CIRCLE SUPERCLASS --- //
     public Snake(double d, double d1, double d2) {
         super(d, d1, d2);
         snakeBody = new ArrayList<>();
@@ -35,7 +37,7 @@ public class Snake extends Circle {
 
         }
 
-        if (currentDirection == 0) {
+        if (currentDirection == 0) { // Steps with the current direction
             setCenterY(getCenterY() - STEP);
             y = y - STEP;
         } else if (currentDirection == 1) {
@@ -62,22 +64,6 @@ public class Snake extends Circle {
         return false;
     }
 
-    public int getLength() {
-        return length;
-    }
-
-    public int getCurrentDirection() {
-        return currentDirection;
-    }
-
-    public Point getPos() {
-        return this.pos;
-    }
-
-    public void setCurrentDirection(int d) {
-        currentDirection = d;
-    }
-
     private Circle endTail() {
         if (length == 0) {
             return this;
@@ -92,6 +78,24 @@ public class Snake extends Circle {
         f.setCenterY(tail.getCenterY());
         f.setFill(Color.BLACK);
         snakeBody.add(length++, f);
+    }
+
+    // --- GETTERS AND SETTERS --- //
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getCurrentDirection() {
+        return currentDirection;
+    }
+
+    public Point getPos() {
+        return this.pos;
+    }
+
+    public void setCurrentDirection(int d) {
+        currentDirection = d;
     }
 
 }

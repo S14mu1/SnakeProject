@@ -16,7 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.Scene;
 
 public class PrimaryController {
-
+    // --- VARIABLES --- //
     @FXML
     private AnchorPane aPane;
     private Circle food;
@@ -32,7 +32,7 @@ public class PrimaryController {
         App.setRoot("secondary");
     }
 
-    // --- Game logic ---//
+    // -------------------------- Game logic --------------------------//
     public void newSnake() {
         s = new Snake(App.w / 2, App.h / 2, App.size / 2);
         aPane.getChildren().add(s);
@@ -46,7 +46,7 @@ public class PrimaryController {
     public void newFood() {
         int x = r.nextInt(App.w / App.size - 1);
         int y = r.nextInt(App.w / App.size - 1);
-        food = new Circle(x * App.size, y * App.size, App.size / 2);
+        food = new Circle(x * App.size, y * App.size, App.size / 2 - 3);
         food.setFill(Color.RED);
         aPane.getChildren().add(food);
     }
@@ -55,12 +55,15 @@ public class PrimaryController {
         return food.intersects(s.getBoundsInLocal());
     }
 
+    // --- STARTUP --- //
     @FXML
     private void run() {
         aPane.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
+        newFood();
         drawBackground(gc);
         newSnake();
+        s.eat(food);
     }
 
     public void adjustLocation() {
@@ -76,6 +79,7 @@ public class PrimaryController {
         }
     }
 
+    // --- THE GAME LOOP --- //
     @FXML
     public void move() {
         s.step();
@@ -86,22 +90,26 @@ public class PrimaryController {
         }
     }
 
+    // --- MOVEMENNT--- //
+    /*
+     * directions: 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
+     */
     @FXML
     void moveSquareKeyPressed(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.W )&& direction!=1) {
-            direction =0;
+        if (event.getCode().equals(KeyCode.W) && direction != 1) {
+            direction = 0;
             s.setCurrentDirection(0);
             move();
-        } else if (event.getCode().equals(KeyCode.S)&& direction!=0) {
-            direction =1;
+        } else if (event.getCode().equals(KeyCode.S) && direction != 0) {
+            direction = 1;
             s.setCurrentDirection(1);
             move();
-        } else if (event.getCode().equals(KeyCode.A)&& direction!=3) {
-            direction =2;
+        } else if (event.getCode().equals(KeyCode.A) && direction != 3) {
+            direction = 2;
             s.setCurrentDirection(2);
             move();
-        } else if (event.getCode().equals(KeyCode.D)&& direction!=2) {
-            direction =3;
+        } else if (event.getCode().equals(KeyCode.D) && direction != 2) {
+            direction = 3;
             s.setCurrentDirection(3);
             move();
         }
