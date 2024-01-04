@@ -60,10 +60,9 @@ public class PrimaryController {
     private void run() {
         aPane.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
-        newFood();
         drawBackground(gc);
         newSnake();
-        s.eat(food);
+        newFood();
     }
 
     public void adjustLocation() {
