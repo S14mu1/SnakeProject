@@ -98,4 +98,8 @@ public class Snake extends Circle {
         currentDirection = d;
     }
 
+    public ArrayList<Circle> getSnakeBody() {
+        return snakeBody;
+    }
+
 }

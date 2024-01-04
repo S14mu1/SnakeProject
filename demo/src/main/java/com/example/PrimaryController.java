@@ -44,11 +44,24 @@ public class PrimaryController {
     }
 
     public void newFood() {
-        int x = r.nextInt(App.w / App.size - 1);
-        int y = r.nextInt(App.w / App.size - 1);
+        int x, y;
+        do {
+            x = r.nextInt(App.w / App.size - 1);
+            y = r.nextInt(App.w / App.size - 1);
+        } while (isFoodOnSnake(x * App.size, y * App.size));
+
         food = new Circle(x * App.size, y * App.size, App.size / 2 - 3);
         food.setFill(Color.RED);
         aPane.getChildren().add(food);
+    }
+
+    private boolean isFoodOnSnake(double x, double y) {
+        for (Circle segment : s.getSnakeBody()) {
+            if (segment.intersects(x, y, App.size, App.size)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean hit() {
