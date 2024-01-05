@@ -20,6 +20,7 @@ public class PrimaryController {
     @FXML
     private AnchorPane aPane;
     private Circle food;
+    private int score = 0;
     private Random r = new Random();
     Point p = new Point(100, 100);
     private Snake s;
@@ -46,8 +47,8 @@ public class PrimaryController {
     public void newFood() {
         int x, y;
         do {
-            x = r.nextInt(App.w / App.size - 1);
-            y = r.nextInt(App.w / App.size - 1);
+            x = r.nextInt(App.row - 1);
+            y = r.nextInt(App.row - 1);
         } while (isFoodOnSnake(x * App.size, y * App.size));
 
         food = new Circle(x * App.size, y * App.size, App.size / 2 - 3);
@@ -67,12 +68,13 @@ public class PrimaryController {
     }
 
     private boolean hit() {
+        score++;
         return food.intersects(s.getBoundsInLocal());
     }
 
-    private boolean gameover(){
+    private boolean gameover() {
         if (s.selfCollide()) {
-            return true; 
+            return true;
         }
         return false;
     }
@@ -112,7 +114,7 @@ public class PrimaryController {
         }
         if (gameover()) {
             App.setRoot("secondary");
-            
+
         }
     }
 
