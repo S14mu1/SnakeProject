@@ -1,8 +1,13 @@
 package com.example;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -26,6 +31,7 @@ public class PrimaryController {
     private int direction;
     Canvas canvas = new Canvas(App.w, App.h);
     private GraphicsContext gc;
+    private ScheduledExecutorService executorService;
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -70,9 +76,9 @@ public class PrimaryController {
         return food.intersects(s.getBoundsInLocal());
     }
 
-    private boolean gameover(){
+    private boolean gameover() {
         if (s.selfCollide()) {
-            return true; 
+            return true;
         }
         return false;
     }
@@ -85,6 +91,44 @@ public class PrimaryController {
         drawBackground(gc);
         newSnake();
         newFood();
+
+        startGameLoop();
+    }
+
+    // --- GAME LOOP CODE --- //
+    private void startGameLoop() { // Runs the loop
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(() -> Platform.runLater(this::gameLoopIteration), 0, 80,
+                TimeUnit.MILLISECONDS);
+    }
+
+    private void stopGameLoop() { // Stops the loop
+        if (executorService != null) {
+            executorService.shutdownNow();
+        }
+    }
+
+    private void gameLoopIteration() { // Defines what happens each iteration
+        Platform.runLater(() -> {
+            try {
+                move();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            adjustLocation();
+            if (hit()) {
+                s.eat(food);
+                newFood();
+            }
+            if (gameover()) {
+                stopGameLoop();
+                try {
+                    App.setRoot("secondary");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void adjustLocation() {
@@ -112,7 +156,7 @@ public class PrimaryController {
         }
         if (gameover()) {
             App.setRoot("secondary");
-            
+
         }
     }
 
@@ -125,19 +169,15 @@ public class PrimaryController {
         if (event.getCode().equals(KeyCode.W) && direction != 1) {
             direction = 0;
             s.setCurrentDirection(0);
-            move();
         } else if (event.getCode().equals(KeyCode.S) && direction != 0) {
             direction = 1;
             s.setCurrentDirection(1);
-            move();
         } else if (event.getCode().equals(KeyCode.A) && direction != 3) {
             direction = 2;
             s.setCurrentDirection(2);
-            move();
         } else if (event.getCode().equals(KeyCode.D) && direction != 2) {
             direction = 3;
             s.setCurrentDirection(3);
-            move();
         }
     }
 

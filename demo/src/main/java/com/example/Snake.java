@@ -17,7 +17,7 @@ public class Snake extends Circle {
     public Snake(double d, double d1, double d2) {
         super(d, d1, d2);
         snakeBody = new ArrayList<>();
-        currentDirection = 5;
+        currentDirection = 0;
         pos = new Point(App.w / 2, App.h / 2);
     }
 
@@ -76,7 +76,7 @@ public class Snake extends Circle {
         Circle tail = endTail();
         f.setCenterX(tail.getCenterX());
         f.setCenterY(tail.getCenterY());
-        f.setFill(Color.web("000000"));
+        f.setFill(Color.rgb(0, 0 + length * 3, 0 + length * 1));
         snakeBody.add(length++, f);
     }
 
