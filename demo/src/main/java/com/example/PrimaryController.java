@@ -13,6 +13,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.Scene;
 
 public class PrimaryController {
@@ -26,6 +28,7 @@ public class PrimaryController {
     private int direction;
     Canvas canvas = new Canvas(App.w, App.h);
     private GraphicsContext gc;
+    private int score = 0;
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -67,7 +70,11 @@ public class PrimaryController {
     }
 
     private boolean hit() {
-        return food.intersects(s.getBoundsInLocal());
+        boolean isHit = food.intersects(s.getBoundsInLocal());
+        if(isHit){
+            score++;
+        }
+        return isHit;
     }
 
     private boolean gameover(){
@@ -108,6 +115,7 @@ public class PrimaryController {
         if (hit()) {
             s.eat(food);
             newFood();
+            drawBackground(gc);
 
         }
         if (gameover()) {
@@ -154,5 +162,10 @@ public class PrimaryController {
             }
 
         }
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Arial",FontWeight.BOLD,30));
+        gc.fillText("SCORE: "+score,247.5,60);
     }
+    
+
 }
