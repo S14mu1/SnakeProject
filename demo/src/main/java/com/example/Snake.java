@@ -7,8 +7,9 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static int scaler = 10; // Adjusts how smooth the movement will be, high for smooth, low for jagged ---
-                                    // MAX 10 MIN 1 - Pick between 5 and 10 for best experience
+    private static final int scaler = 15; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+                                          // ---
+    // MAX 10 MIN 1 - Pick between 5 and 10 for best experience
     private static int updateScaler = scaler; // Same as scaler but updates
     private ArrayList<Circle> snakeBody;
     private int length = 0;
@@ -121,7 +122,17 @@ public class Snake extends Circle {
     }
 
     public void setCurrentDirection(int d) {
-        bufferedDirection = d;
+        if (d == 0 && currentDirection != 1) {
+            bufferedDirection = d;
+        } else if (d == 1 && currentDirection != 0) {
+            bufferedDirection = d;
+        } else if (d == 2 && currentDirection != 3) {
+            bufferedDirection = d;
+        } else if (d == 3 && currentDirection != 2) {
+            bufferedDirection = d;
+        } else {
+            bufferedDirection = currentDirection;
+        }
     }
 
     public ArrayList<Circle> getSnakeBody() {

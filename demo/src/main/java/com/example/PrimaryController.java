@@ -3,8 +3,9 @@ package com.example;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -16,21 +17,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 public class PrimaryController {
     // -------------------------- VARIABLES -------------------------- //
     @FXML
     private AnchorPane aPane;
     private Circle food;
-    private Random r = new Random(); //Used in foods position
+    private Random r = new Random(); // Used in foods position
     Point p = new Point(100, 100);
     private Snake s;
     private int direction;
     Canvas canvas = new Canvas(App.w, App.h);
     private GraphicsContext gc;
     private int score;
-    private int TIME = 80; // Milliseconds between each gametick
-    private ScheduledExecutorService executorService; //Runs the game loop
+    private final int TIME = 80; // Milliseconds between each gametick
+    private Timeline gameLoop;
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -43,7 +45,7 @@ public class PrimaryController {
      */
     // -------------------------- STARTUP -------------------------- //
     @FXML
-    private void run() { //Runs when button is pressed, runs starts up the game
+    private void run() { // Runs when button is pressed, runs starts up the game
         aPane.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
         drawBackground(gc);
@@ -52,14 +54,13 @@ public class PrimaryController {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         gc.fillText("SCORE: " + score, 247.5, 60);
-
         startGameLoop();
     }
 
     public void newSnake() {
         s = new Snake(App.w / 2, App.h / 2, App.size / 2);
         aPane.getChildren().add(s);
-        for (int i = 0; i < 1*s.getScaler(); i++) { 
+        for (int i = 0; i < 1 * s.getScaler(); i++) {
             newFood();
             s.eat(food);
         }
@@ -73,8 +74,8 @@ public class PrimaryController {
             x = r.nextInt((App.w / App.size) - 2) + 1; // Generate x within [1, (App.w / App.size - 2)]
             y = r.nextInt((App.w / App.size) - 2) + 1; // Generate y within [1, (App.w / App.size - 2)]
         } while (isFoodOnSnake(x * App.size, y * App.size));
-    
-        food = new Circle(x * App.size, y * App.size, (App.size / 2)*0.8);
+
+        food = new Circle(x * App.size, y * App.size, (App.size / 2) * 0.8);
         food.setFill(Color.AQUAMARINE);
         aPane.getChildren().add(food);
     }
@@ -105,41 +106,76 @@ public class PrimaryController {
         return false;
     }
 
-
     // -------------------------- GAME LOOP CODE -------------------------- //
-    private void startGameLoop() { // Runs the loop
-        executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() -> Platform.runLater(this::gameLoopIteration), 0, TIME/s.getScaler(),
-                TimeUnit.MILLISECONDS);
+
+    private void startGameLoop() {
+        KeyFrame frame = new KeyFrame(Duration.millis(TIME / s.getScaler()), e -> gameLoopIteration());
+        gameLoop = new Timeline(frame);
+        gameLoop.setCycleCount(Timeline.INDEFINITE);
+        gameLoop.play();
     }
 
-    private void stopGameLoop() { // Stops the loop
-        if (executorService != null) {
-            executorService.shutdownNow();
+    private void stopGameLoop() {
+        if (gameLoop != null) {
+            gameLoop.stop();
         }
     }
 
-    private void gameLoopIteration() { // Defines what happens each iteration
-        Platform.runLater(() -> {
+    private void gameLoopIteration() {
+        try {
+            move();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        adjustLocation();
+        if (hit()) {
+            s.eat(food);
+            newFood();
+        }
+        if (gameover()) {
+            stopGameLoop();
             try {
-                move();
+                App.setRoot("secondary");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            adjustLocation();
-            if (hit()) {
-                    s.eat(food);
-                    newFood();
-            }
-            if (gameover()) {
-                stopGameLoop();
-                try {
-                    App.setRoot("secondary");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        }
+    }
+
+    private void resetGameState() {
+        // Reset score
+        score = 0;
+
+        // Reset snake position and state
+        s = null; // Dispose of the old snake (if any)
+        newSnake();
+
+        // Reset other game state variables as needed
+        // ...
+
+        // Clear the game pane and redraw the background
+        aPane.getChildren().clear();
+        gc = canvas.getGraphicsContext2D();
+        drawBackground(gc);
+
+        // Display initial score
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        gc.fillText("SCORE: " + score, 247.5, 60);
+    }
+
+    //
+
+    private void switchToGameOver() throws IOException {
+        stopGameLoop(); // Stop the game loop when the game ends
+        resetGameState(); // Reset the game state
+        App.setRoot("secondary"); // Switch to the "Game Over" screen
+    }
+
+    private void switchToGame() throws IOException {
+        resetGameState(); // Reset the game state
+        startGameLoop(); // Start the game loop when restarting the game
+        App.setRoot("primary"); // Switch to the main game screen
     }
 
     // -------------------------- TORUS DEFINITION -------------------------- //
@@ -162,7 +198,7 @@ public class PrimaryController {
         s.step();
         adjustLocation();
         if (hit()) {
-            for (int i = 0; i < s.getScaler(); i++) { //Ensures that the snake grows equal to the scaler
+            for (int i = 0; i < s.getScaler(); i++) { // Ensures that the snake grows equal to the scaler
                 s.eat(food);
                 newFood();
             }
@@ -184,8 +220,6 @@ public class PrimaryController {
      */
     @FXML
     void moveSquareKeyPressed(KeyEvent event) throws IOException {
-        int t = s.getScaler();
-
         if (event.getCode().equals(KeyCode.W) && direction != 1) {
             direction = 0;
             s.setCurrentDirection(0);
