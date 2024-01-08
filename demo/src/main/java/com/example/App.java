@@ -24,7 +24,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        root = new Pane(loadFXML("primary"));
+        root = new Pane(loadFXML("mainMenu"));
         root.setPrefSize(w, h);
 
         scene = new Scene(root);
