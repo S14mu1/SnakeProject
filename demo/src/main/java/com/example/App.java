@@ -16,7 +16,7 @@ public class App extends Application {
 
     private static Scene scene;
     static int w = 600;
-    static int h = 600;
+    static int h = w;
     static int row = 20;
     static int size = w / row;
     static Pane root;

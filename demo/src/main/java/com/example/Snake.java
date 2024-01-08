@@ -6,14 +6,20 @@ import java.util.*;
 
 public class Snake extends Circle {
 
-    // --- VARIABLES --- //
+    // -------------------------- VARIABLES -------------------------- //
+    private static int scaler = 5; //Adjusts how smooth the movement will be, high for smooth, low for jagged --- MAX 10 MIN 1 - Pick between 5 and 10 for best experience
+    private static int updateScaler = scaler; // Same as scaler but updates
     private ArrayList<Circle> snakeBody;
     private int length = 0;
-    private static final int STEP = App.size;
+    private static final int STEP = App.size/updateScaler; //Spacing between each segment
     private int currentDirection;
     private Point pos;
+    private int bufferedDirection = 0;
+    private int colorChange = 0;
+    private int c = 0;
+    
 
-    // --- CONSTRUCTOR USES CIRCLE SUPERCLASS --- //
+    // -------------------------- CONSTRUCTOR USES CIRCLE SUPERCLASS -------------------------- //
     public Snake(double d, double d1, double d2) {
         super(d, d1, d2);
         snakeBody = new ArrayList<>();
@@ -21,7 +27,7 @@ public class Snake extends Circle {
         pos = new Point(App.w / 2, App.h / 2);
     }
 
-    // --- MOVEMENT OF THE SNAKE --- //
+    // -------------------------- MOVEMENT OF THE SNAKE -------------------------- //
     public void step() {
         int x = pos.getX();
         int y = pos.getY();
@@ -51,9 +57,16 @@ public class Snake extends Circle {
             x = x + STEP;
         }
         pos.translate(x, y);
+        
+        updateScaler--;
+
+        if(updateScaler == 0){
+            updateScaler = scaler;
+            currentDirection = bufferedDirection;
+        }
     }
 
-    // --- COLLISION WITH ITSELF --- //
+    // -------------------------- COLLISION WITH ITSELF -------------------------- //
     public boolean selfCollide() {
         for (int i = 0; i < length; i++) {
             if (this.getCenterX() == snakeBody.get(i).getCenterX()
@@ -71,16 +84,25 @@ public class Snake extends Circle {
         return snakeBody.get(length - 1);
     }
 
-    // --- EATING FUNCTION --- ///
+    // -------------------------- EATING FUNCTION -------------------------- ///
     public void eat(Circle f) {
+        
         Circle tail = endTail();
         f.setCenterX(tail.getCenterX());
         f.setCenterY(tail.getCenterY());
-        f.setFill(Color.rgb(0, 0 + length * 3, 0 + length * 1));
-        snakeBody.add(length++, f);
+        f.setFill(Color.rgb(0, 0 + c * 3, 0 + c * 3));
+        snakeBody.add(length++, f);    
+        colorChange++;
+
+        // Handles the gradient of the snake, ensures that the value 255 is not exceeded
+        if(colorChange == scaler){
+            c++;
+            colorChange = 0;
+        }
+
     }
 
-    // --- GETTERS AND SETTERS --- //
+    // -------------------------- GETTERS AND SETTERS -------------------------- //
 
     public int getLength() {
         return length;
@@ -95,11 +117,17 @@ public class Snake extends Circle {
     }
 
     public void setCurrentDirection(int d) {
-        currentDirection = d;
+        bufferedDirection = d;
     }
 
     public ArrayList<Circle> getSnakeBody() {
         return snakeBody;
     }
+
+    public int getScaler(){
+        return updateScaler;
+    }
+
+    
 
 }

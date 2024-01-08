@@ -5,14 +5,10 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.skin.TextInputControlSkin.Direction;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -21,20 +17,20 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-
 public class PrimaryController {
-    // --- VARIABLES --- //
+    // -------------------------- VARIABLES -------------------------- //
     @FXML
     private AnchorPane aPane;
     private Circle food;
-    private Random r = new Random();
+    private Random r = new Random(); //Used in foods position
     Point p = new Point(100, 100);
     private Snake s;
     private int direction;
     Canvas canvas = new Canvas(App.w, App.h);
     private GraphicsContext gc;
     private int score;
-    private ScheduledExecutorService executorService;
+    private int TIME = 80; // Milliseconds between each gametick
+    private ScheduledExecutorService executorService; //Runs the game loop
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -42,29 +38,48 @@ public class PrimaryController {
     }
 
     // -------------------------- Game logic --------------------------//
+    /*
+     * Here all the game logic will be this is how the game is controlled
+     */
+    // -------------------------- STARTUP -------------------------- //
+    @FXML
+    private void run() { //Runs when button is pressed, runs starts up the game
+        aPane.getChildren().add(canvas);
+        gc = canvas.getGraphicsContext2D();
+        drawBackground(gc);
+        newSnake();
+        newFood();
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        gc.fillText("SCORE: " + score, 247.5, 60);
+
+        startGameLoop();
+    }
+
     public void newSnake() {
         s = new Snake(App.w / 2, App.h / 2, App.size / 2);
         aPane.getChildren().add(s);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1*s.getScaler(); i++) { 
             newFood();
             s.eat(food);
         }
 
     }
 
+    // Makes the food.
     public void newFood() {
         int x, y;
         do {
-            x = r.nextInt(App.w / App.size - 1);
-            y = r.nextInt(App.w / App.size - 1);
+            x = r.nextInt((App.w / App.size) - 2) + 1; // Generate x within [1, (App.w / App.size - 2)]
+            y = r.nextInt((App.w / App.size) - 2) + 1; // Generate y within [1, (App.w / App.size - 2)]
         } while (isFoodOnSnake(x * App.size, y * App.size));
-
-        food = new Circle(x * App.size, y * App.size, App.size / 2 - 3);
-        food.setFill(Color.RED);
+    
+        food = new Circle(x * App.size, y * App.size, (App.size / 2)*0.8);
+        food.setFill(Color.AQUAMARINE);
         aPane.getChildren().add(food);
     }
 
-    // --- CHECKERS --- //
+    // --------------------------CHECKERS -------------------------- //
 
     private boolean isFoodOnSnake(double x, double y) {
         for (Circle segment : s.getSnakeBody()) {
@@ -77,7 +92,7 @@ public class PrimaryController {
 
     private boolean hit() {
         boolean isHit = food.intersects(s.getBoundsInLocal());
-        if(isHit){
+        if (isHit) {
             score++;
         }
         return isHit;
@@ -90,25 +105,11 @@ public class PrimaryController {
         return false;
     }
 
-    // --- STARTUP --- //
-    @FXML
-    private void run() {
-        aPane.getChildren().add(canvas);
-        gc = canvas.getGraphicsContext2D();
-        drawBackground(gc);
-        newSnake();
-        newFood();
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial",FontWeight.BOLD,30));
-        gc.fillText("SCORE: "+score,247.5,60);
 
-        startGameLoop();
-    }
-
-    // --- GAME LOOP CODE --- //
+    // -------------------------- GAME LOOP CODE -------------------------- //
     private void startGameLoop() { // Runs the loop
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() -> Platform.runLater(this::gameLoopIteration), 0, 80,
+        executorService.scheduleAtFixedRate(() -> Platform.runLater(this::gameLoopIteration), 0, TIME/s.getScaler(),
                 TimeUnit.MILLISECONDS);
     }
 
@@ -127,8 +128,8 @@ public class PrimaryController {
             }
             adjustLocation();
             if (hit()) {
-                s.eat(food);
-                newFood();
+                    s.eat(food);
+                    newFood();
             }
             if (gameover()) {
                 stopGameLoop();
@@ -141,6 +142,7 @@ public class PrimaryController {
         });
     }
 
+    // -------------------------- TORUS DEFINITION -------------------------- //
     public void adjustLocation() {
         if (s.getCenterX() < 0) {
             s.setCenterX(App.w);
@@ -154,18 +156,20 @@ public class PrimaryController {
         }
     }
 
-    // --- THE GAME LOOP --- //
+    // -------------------------- THE GAME LOOP -------------------------- //
     @FXML
     public void move() throws IOException {
         s.step();
         adjustLocation();
         if (hit()) {
-            s.eat(food);
-            newFood();
+            for (int i = 0; i < s.getScaler(); i++) { //Ensures that the snake grows equal to the scaler
+                s.eat(food);
+                newFood();
+            }
             drawBackground(gc);
             gc.setFill(Color.WHITE);
-            gc.setFont(Font.font("Arial",FontWeight.BOLD,30));
-            gc.fillText("SCORE: "+score,247.5,60);
+            gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+            gc.fillText("SCORE: " + score, 247.5, 60);
 
         }
         if (gameover()) {
@@ -174,12 +178,14 @@ public class PrimaryController {
         }
     }
 
-    // --- MOVEMENNT--- //
+    // -------------------------- MOVEMENNT -------------------------- //
     /*
      * directions: 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
      */
     @FXML
     void moveSquareKeyPressed(KeyEvent event) throws IOException {
+        int t = s.getScaler();
+
         if (event.getCode().equals(KeyCode.W) && direction != 1) {
             direction = 0;
             s.setCurrentDirection(0);
@@ -195,7 +201,7 @@ public class PrimaryController {
         }
     }
 
-    // --- Background --- //
+    // --------------------------BACKGROUND -------------------------- //
     private void drawBackground(GraphicsContext gc) {
         for (int i = -1; i < App.row + 1; i++) {
             for (int j = -1; j < App.row + 1; j++) {
@@ -210,6 +216,5 @@ public class PrimaryController {
         }
 
     }
-    
 
 }
