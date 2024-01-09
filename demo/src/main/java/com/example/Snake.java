@@ -7,10 +7,10 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static final int scaler = 15; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+    private static final int scaler = 10; // Adjusts how smooth the movement will be, high for smooth, low for jagged
                                           // ---
-    // MAX 10 MIN 1 - Pick between 15 and 30 for best experience
-    private static int updateScaler = scaler; // Same as scaler but updates
+    // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4 ,
+    // really buggy
     private ArrayList<Circle> snakeBody;
     private int length = 0;
     private static final int STEP = App.size / scaler; // Spacing between each segment
@@ -136,7 +136,7 @@ public class Snake extends Circle {
     }
 
     public int getScaler() {
-        return updateScaler;
+        return scaler;
     }
 
 }
