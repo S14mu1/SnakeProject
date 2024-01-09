@@ -57,7 +57,8 @@ public class PrimaryController {
     }
 
     private void newSnake() {
-        s = new Snake(App.w / 2, App.h / 2, App.size / 2);
+        s = new Snake(App.w / 2, App.h / 2, App.size / 2 * 0.95);
+        s.setFill(Color.BLACK);
         aPane.getChildren().add(s);
         for (int i = 0; i < 1 * s.getScaler(); i++) {
             newFood();
@@ -75,7 +76,7 @@ public class PrimaryController {
         } while (isFoodOnSnake(x * App.size, y * App.size));
 
         food = new Circle(x * App.size, y * App.size, (App.size / 2) * 0.8);
-        food.setFill(Color.AQUAMARINE);
+        food.setFill(Color.web("3742A5"));
         aPane.getChildren().add(food);
     }
 
@@ -180,9 +181,9 @@ public class PrimaryController {
         for (int i = -1; i < App.row + 1; i++) {
             for (int j = -1; j < App.row + 1; j++) {
                 if ((i + j) % 2 == 0) {
-                    gc.setFill(Color.web("AA0751"));
+                    gc.setFill(Color.web("BA9B2F"));
                 } else {
-                    gc.setFill(Color.web("A20751"));
+                    gc.setFill(Color.web("FAC300"));
                 }
                 gc.fillRect(i * App.size + App.size / 2, j * App.size + App.size / 2, App.size, App.size);
             }
