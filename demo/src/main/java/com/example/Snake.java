@@ -9,11 +9,11 @@ public class Snake extends Circle {
     // -------------------------- VARIABLES -------------------------- //
     private static final int scaler = 15; // Adjusts how smooth the movement will be, high for smooth, low for jagged
                                           // ---
-    // MAX 10 MIN 1 - Pick between 5 and 10 for best experience
+    // MAX 10 MIN 1 - Pick between 15 and 30 for best experience
     private static int updateScaler = scaler; // Same as scaler but updates
     private ArrayList<Circle> snakeBody;
     private int length = 0;
-    private static final int STEP = App.size / updateScaler; // Spacing between each segment
+    private static final int STEP = App.size / scaler; // Spacing between each segment
     private int currentDirection;
     private Point pos;
     private int bufferedDirection = 0;
@@ -43,7 +43,11 @@ public class Snake extends Circle {
                 snakeBody.get(i).setCenterX(snakeBody.get(i - 1).getCenterX());
                 snakeBody.get(i).setCenterY(snakeBody.get(i - 1).getCenterY());
             }
+        }
 
+        // Check if the snake is in the middle of a tile
+        if (Math.round(getCenterX()) % App.size == 0 && Math.round(getCenterY()) % App.size == 0) {
+            currentDirection = bufferedDirection;
         }
 
         if (currentDirection == 0) { // Steps with the current direction
@@ -60,14 +64,6 @@ public class Snake extends Circle {
             x = x + STEP;
         }
         pos.translate(x, y);
-
-        updateScaler--;
-
-        // Buffer, ensures that the snake will only change directions on tiles
-        if (updateScaler == 0) {
-            updateScaler = scaler;
-            currentDirection = bufferedDirection;
-        }
     }
 
     // -------------------------- COLLISION WITH ITSELF --------------------------

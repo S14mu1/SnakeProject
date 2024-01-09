@@ -25,13 +25,12 @@ public class PrimaryController {
     private AnchorPane aPane;
     private Circle food;
     private Random r = new Random(); // Used in foods position
-    Point p = new Point(100, 100);
     private Snake s;
     private int direction;
     Canvas canvas = new Canvas(App.w, App.h);
     private GraphicsContext gc;
     private int score;
-    private final int TIME = 80; // Milliseconds between each gametick
+    private final int TIME = 100; // Milliseconds between each gametick
     private Timeline gameLoop;
 
     @FXML
@@ -57,7 +56,7 @@ public class PrimaryController {
         startGameLoop();
     }
 
-    public void newSnake() {
+    private void newSnake() {
         s = new Snake(App.w / 2, App.h / 2, App.size / 2);
         aPane.getChildren().add(s);
         for (int i = 0; i < 1 * s.getScaler(); i++) {
@@ -68,7 +67,7 @@ public class PrimaryController {
     }
 
     // Makes the food.
-    public void newFood() {
+    private void newFood() {
         int x, y;
         do {
             x = r.nextInt((App.w / App.size) - 2) + 1; // Generate x within [1, (App.w / App.size - 2)]
@@ -122,15 +121,14 @@ public class PrimaryController {
     }
 
     private void gameLoopIteration() {
-        try {
-            move();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        s.step();
         adjustLocation();
         if (hit()) {
-            s.eat(food);
-            newFood();
+            for (int i = 0; i < s.getScaler(); i++) {
+                s.eat(food);
+                newFood();
+                score++;
+            }
         }
         if (gameover()) {
             stopGameLoop();
@@ -140,42 +138,6 @@ public class PrimaryController {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void resetGameState() {
-        // Reset score
-        score = 0;
-
-        // Reset snake position and state
-        s = null; // Dispose of the old snake (if any)
-        newSnake();
-
-        // Reset other game state variables as needed
-        // ...
-
-        // Clear the game pane and redraw the background
-        aPane.getChildren().clear();
-        gc = canvas.getGraphicsContext2D();
-        drawBackground(gc);
-
-        // Display initial score
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-        gc.fillText("SCORE: " + score, 247.5, 60);
-    }
-
-    //
-
-    private void switchToGameOver() throws IOException {
-        stopGameLoop(); // Stop the game loop when the game ends
-        resetGameState(); // Reset the game state
-        App.setRoot("secondary"); // Switch to the "Game Over" screen
-    }
-
-    private void switchToGame() throws IOException {
-        resetGameState(); // Reset the game state
-        startGameLoop(); // Start the game loop when restarting the game
-        App.setRoot("primary"); // Switch to the main game screen
     }
 
     // -------------------------- TORUS DEFINITION -------------------------- //
@@ -192,29 +154,7 @@ public class PrimaryController {
         }
     }
 
-    // -------------------------- THE GAME LOOP -------------------------- //
-    @FXML
-    public void move() throws IOException {
-        s.step();
-        adjustLocation();
-        if (hit()) {
-            for (int i = 0; i < s.getScaler(); i++) { // Ensures that the snake grows equal to the scaler
-                s.eat(food);
-                newFood();
-            }
-            drawBackground(gc);
-            gc.setFill(Color.WHITE);
-            gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-            gc.fillText("SCORE: " + score, 247.5, 60);
-
-        }
-        if (gameover()) {
-            App.setRoot("secondary");
-
-        }
-    }
-
-    // -------------------------- MOVEMENNT -------------------------- //
+    // -------------------------- MOVEMENT -------------------------- //
     /*
      * directions: 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
      */
