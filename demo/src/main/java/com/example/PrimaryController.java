@@ -54,9 +54,6 @@ public class PrimaryController {
         drawLevel(g.getLevel()); // Assuming level 1 for now, you can pass the appropriate level parameter
         newSnake(g);
         newFood();
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-        gc.fillText("SCORE: " + score, 247.5, 60);
         canvas.requestFocus(); // Ensure that the Canvas has focus
         startGameLoop(g.getSpeed());
     }
