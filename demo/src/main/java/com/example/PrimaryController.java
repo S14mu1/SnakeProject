@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
@@ -21,6 +22,7 @@ public class PrimaryController {
     @FXML
     private AnchorPane aPane;
     private Circle food;
+    private Rectangle block;
     private Random r = new Random(); // Used in foods position
     private Snake s;
     private int direction;
@@ -29,6 +31,7 @@ public class PrimaryController {
     private int score;
     private final int TIME = 100; // Milliseconds between each gametick
     private Timeline gameLoop;
+    private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -41,21 +44,29 @@ public class PrimaryController {
      */
     // -------------------------- STARTUP -------------------------- //
     @FXML
-    private void run() { // Runs when button is pressed, runs starts up the game
+    private void run() { // Runs when the button is pressed, starts up the game
         aPane.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
+        Grid g = new Grid();
+        g.setLayout(2);
+        App.setSize(g.getSize());
         drawBackground(gc);
+        drawLevel(2); // Assuming level 1 for now, you can pass the appropriate level parameter
         newSnake();
         newFood();
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         gc.fillText("SCORE: " + score, 247.5, 60);
-        startGameLoop();
+        canvas.requestFocus(); // Ensure that the Canvas has focus
+        startGameLoop(g.getSpeed());
     }
 
-    private void newSnake() {
-        s = new Snake(App.w / 2, App.h / 2, App.size / 2 * 0.95);
-        s.setFill(Color.BLACK); // Change the color of the snakes head
+    public void newSnake() {
+        if (App.row % 2 == 0) {
+            s = new Snake(App.w / 2 + App.size / 2, App.h / 2 + App.size / 2, App.size / 2 * 0.95);
+        } else {
+            s = new Snake(App.w / 2, App.h / 2, App.size / 2 * 0.95);
+        }
         aPane.getChildren().add(s);
         for (int i = 0; i < 1 * s.getScaler(); i++) {
             newFood();
@@ -68,26 +79,53 @@ public class PrimaryController {
     private void newFood() {
         int x, y;
         do {
-            x = r.nextInt((App.w / App.size) - 2) + 1; // Generate x within [1, (App.w / App.size - 2)]
-            y = r.nextInt((App.w / App.size) - 2) + 1; // Generate y within [1, (App.w / App.size - 2)]
-        } while (isFoodOnSnake(x * App.size, y * App.size));
+            x = (int) (Math.random() * App.row) * App.size + App.size / 2;
+            y = (int) (Math.random() * App.row) * App.size + App.size / 2;
+        } while (isFoodTooCloseToSnake(x, y) || isFoodOnSnakeHead(x, y) || isFoodTooCloseToLayout(x, y));
 
-        food = new Circle(x * App.size, y * App.size, (App.size / 2) * 0.8);
+        food = new Circle(x, y, (App.size / 2) * 0.8);
         food.setFill(Color.AQUAMARINE);
         aPane.getChildren().add(food);
     }
 
     // --------------------------CHECKERS -------------------------- //
 
-    private boolean isFoodOnSnake(double x, double y) {
-        for (Circle segment : s.getSnakeBody()) {
-            if (segment.intersects(x, y, App.size, App.size)) {
+    private boolean isFoodOnSnakeHead(double foodX, double foodY) { // Checks if food spawns on head
+        double distanceThreshold = 5.0;
+        double distance = Math.sqrt(Math.pow(foodX - s.getCenterX(), 2) + Math.pow(foodY - s.getCenterY(), 2));
+        return distance < distanceThreshold;
+    }
+
+    private boolean isFoodTooCloseToSnake(double foodX, double foodY) { // Checks if food spawns on rest of body
+        for (Circle bodyPart : s.getSnakeBody()) {
+            double distanceThreshold = 15.0;
+            double distance = Math
+                    .sqrt(Math.pow(foodX - bodyPart.getCenterX(), 2) + Math.pow(foodY - bodyPart.getCenterY(), 2));
+            if (distance < distanceThreshold) {
                 return true;
             }
         }
+
         return false;
     }
 
+    private boolean isFoodTooCloseToLayout(double foodX, double foodY) { // Checks if food spawns on the level walls
+        for (Rectangle b : layout) {
+            double distanceThreshold = App.size;
+            double blockCenterX = b.getX() + b.getWidth() / 2;
+            double blockCenterY = b.getY() + b.getHeight() / 2;
+
+            double distance = Math.sqrt(Math.pow(foodX - blockCenterX, 2) + Math.pow(foodY - blockCenterY, 2));
+
+            if (distance < distanceThreshold) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Collision between food and snake
     private boolean hit() {
         boolean isHit = food.intersects(s.getBoundsInLocal());
         if (isHit) {
@@ -96,17 +134,24 @@ public class PrimaryController {
         return isHit;
     }
 
+    // Collision between snake and itself, and snake and level
     private boolean gameover() {
         if (s.selfCollide()) {
             return true;
         }
+        for (int i = 0; i < layout.size(); i++) {
+            if (layout.get(i).intersects(s.getBoundsInLocal())) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     // -------------------------- GAME LOOP CODE -------------------------- //
 
-    private void startGameLoop() {
-        KeyFrame frame = new KeyFrame(Duration.millis(TIME / s.getScaler()), e -> gameLoopIteration());
+    private void startGameLoop(double speed) {
+        KeyFrame frame = new KeyFrame(Duration.millis(TIME / s.getScaler() * speed), e -> gameLoopIteration());
         gameLoop = new Timeline(frame);
         gameLoop.setCycleCount(Timeline.INDEFINITE);
         gameLoop.play();
@@ -173,16 +218,34 @@ public class PrimaryController {
         }
     }
 
+    // -------------------------- LEVEL DRAWING -------------------------- //
+    private void drawLevel(int level) {
+        Grid g = new Grid();
+        g.setLayout(level);
+
+        for (int i = 0; i < g.getLayout().length; i++) {
+            for (int j = 0; j < g.getLayout()[i].length; j++) {
+                block = new Rectangle(i * App.size, j * App.size, App.size, App.size);
+                if (g.getLayout()[i][j] == 1) {
+                    // Set color or style for the blocks in the grid
+                    block.setFill(Color.web("660431"));
+                    aPane.getChildren().add(block);
+                    layout.add(block);
+                }
+            }
+        }
+    }
+
     // --------------------------BACKGROUND -------------------------- //
     private void drawBackground(GraphicsContext gc) {
-        for (int i = -1; i < App.row + 1; i++) {
-            for (int j = -1; j < App.row + 1; j++) {
+        for (int i = -1; i < App.row; i++) {
+            for (int j = -1; j < App.row; j++) {
                 if ((i + j) % 2 == 0) {
                     gc.setFill(Color.web("AA0751"));
                 } else {
                     gc.setFill(Color.web("A20751"));
                 }
-                gc.fillRect(i * App.size + App.size / 2, j * App.size + App.size / 2, App.size, App.size);
+                gc.fillRect(j * App.size, i * App.size, App.size, App.size);
             }
 
         }
