@@ -48,11 +48,11 @@ public class PrimaryController {
         aPane.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
         Grid g = new Grid();
-        g.setLayout(2);
+        g.setLayout(5);
         App.setSize(g.getSize());
         drawBackground(gc);
-        drawLevel(2); // Assuming level 1 for now, you can pass the appropriate level parameter
-        newSnake();
+        drawLevel(g.getLevel()); // Assuming level 1 for now, you can pass the appropriate level parameter
+        newSnake(g);
         newFood();
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 30));
@@ -61,11 +61,17 @@ public class PrimaryController {
         startGameLoop(g.getSpeed());
     }
 
-    public void newSnake() {
+    public void newSnake(Grid g) {
+        int level = g.getLevel();
+        System.out.println(level);
         if (App.row % 2 == 0) {
-            s = new Snake(App.w / 2 + App.size / 2, App.h / 2 + App.size / 2, App.size / 2 * 0.95);
+            if (level == 2 || level == 4 || level == 5) {
+                s = new Snake(1 * App.size + App.size / 2, 1 * App.size + App.size / 2, App.size / 2 * 0.90);
+            } else {
+                s = new Snake(App.w / 2 + App.size / 2, App.h / 2 + App.size / 2, App.size / 2 * 0.90);
+            }
         } else {
-            s = new Snake(App.w / 2, App.h / 2, App.size / 2 * 0.95);
+            s = new Snake(App.w / 2, App.h / 2, App.size / 2 * 0.90);
         }
         aPane.getChildren().add(s);
         for (int i = 0; i < 1 * s.getScaler(); i++) {
@@ -225,7 +231,7 @@ public class PrimaryController {
 
         for (int i = 0; i < g.getLayout().length; i++) {
             for (int j = 0; j < g.getLayout()[i].length; j++) {
-                block = new Rectangle(i * App.size, j * App.size, App.size, App.size);
+                block = new Rectangle(j * App.size, i * App.size, App.size, App.size);
                 if (g.getLayout()[i][j] == 1) {
                     // Set color or style for the blocks in the grid
                     block.setFill(Color.web("660431"));
