@@ -177,7 +177,7 @@ public class PrimaryController {
 
     private void gameLoopIteration() {
         s.step();
-        appenTextToFile(filepath,s.getSnakeCoordinates());
+        appendTextToFile(filepath,s.getSnakeCoordinates());
         adjustLocation();
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
