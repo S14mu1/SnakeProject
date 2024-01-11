@@ -8,9 +8,9 @@ public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
     private static final int scaler = 1; // Adjusts how smooth the movement will be, high for smooth, low for jagged
-                                          // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4
-                                          // ,really buggy
-                                          // Replaying runs very slow at anything higher than scaler 1, working on it
+                                         // ---
+    // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4 ,
+    // really buggy
     private ArrayList<Circle> snakeBody;
     private int length = 0;
     private int STEP = App.size / scaler; // Spacing between each segment
