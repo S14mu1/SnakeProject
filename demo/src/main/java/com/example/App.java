@@ -47,4 +47,9 @@ public class App extends Application {
         launch();
     }
 
+    static void setSize(int newRow) {
+        row = newRow;
+        size = w / row;
+    }
+
 }
