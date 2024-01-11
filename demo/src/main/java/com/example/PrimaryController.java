@@ -182,7 +182,7 @@ public class PrimaryController {
 
     private void gameLoopIteration() {
         s.step();
-        appendTextToFile(filepath, s.getSnakeCoordinates());
+        // appendTextToFile(filepath, s.getSnakeCoordinates());
         adjustLocation();
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
@@ -275,7 +275,7 @@ public class PrimaryController {
                 } else {
                     gc.setFill(Color.web("A20751"));
                 }
-                gc.fillRect(i * App.size + App.size / 2, j * App.size + App.size / 2, App.size, App.size);
+                gc.fillRect(i * App.size, j * App.size, App.size, App.size);
             }
 
         }

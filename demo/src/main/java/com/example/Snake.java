@@ -154,5 +154,3 @@ public class Snake extends Circle {
     }
 
 }
-
-    
