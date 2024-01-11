@@ -18,12 +18,15 @@ public class Snake extends Circle {
     private int bufferedDirection = 0;
     private int colorChange = 0;
     private int c = 0;
+    private ArrayList<Point> snakeCoordinates;
+
 
     // -------------------------- CONSTRUCTOR USES CIRCLE SUPERCLASS
     // -------------------------- //
     public Snake(double d, double d1, double d2) {
         super(d, d1, d2);
         snakeBody = new ArrayList<>();
+        snakeCoordinates = new ArrayList<>();
         currentDirection = 0;
         pos = new Point(App.w / 2, App.h / 2);
     }
@@ -33,6 +36,12 @@ public class Snake extends Circle {
     public void step() {
         int x = pos.getX();
         int y = pos.getY();
+
+        snakeCoordinates.clear(); 
+        snakeCoordinates.add(new Point((int)getCenterX(), (int)getCenterY())); // Add the head's new position
+        for (Circle segment : snakeBody) {
+            snakeCoordinates.add(new Point((int)segment.getCenterX(), (int)segment.getCenterY())); // Add body segment positions
+        }
 
         for (int i = length - 1; i >= 0; i--) {
             if (i == 0) {
@@ -138,5 +147,7 @@ public class Snake extends Circle {
     public int getScaler() {
         return scaler;
     }
-
+    public ArrayList<Point> getSnakeCoordinates() {
+        return snakeCoordinates;
+    }
 }

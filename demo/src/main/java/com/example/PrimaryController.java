@@ -1,5 +1,7 @@
 package com.example;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import javafx.animation.KeyFrame;
@@ -30,6 +32,7 @@ public class PrimaryController {
     private GraphicsContext gc;
     private int score;
     private final int TIME = 100; // Milliseconds between each gametick
+    static String filepath = ("demo\\src\\main\\java\\com\\example\\Replay.txt");
     private Timeline gameLoop;
     private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
 
@@ -56,6 +59,12 @@ public class PrimaryController {
         newFood();
         canvas.requestFocus(); // Ensure that the Canvas has focus
         startGameLoop(g.getSpeed());
+        try (FileWriter writer = new FileWriter(filepath, false)) { // false to overwrite
+            writer.write(""); // Writing an empty string to clear the file
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void newSnake(Grid g) {
@@ -168,6 +177,7 @@ public class PrimaryController {
 
     private void gameLoopIteration() {
         s.step();
+        appenTextToFile(filepath,s.getSnakeCoordinates());
         adjustLocation();
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
@@ -197,6 +207,16 @@ public class PrimaryController {
             s.setCenterY(App.h);
         } else if (s.getCenterY() > App.h) {
             s.setCenterY(0);
+        }
+    }
+    //-----------------------File Processing-------------------------------------------------------------------\\
+    private static void appendTextToFile(String filePath, ArrayList<Point> array) {
+        String text = (""+array);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(text);
+            writer.newLine(); // Writes a new line
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
