@@ -56,7 +56,6 @@ public class Grid {
             case 2:
                 this.size = 10;
                 setSpeed(1.5);
-                ;
                 setLevel(2);
                 int[][] temp1 = {
                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -105,6 +104,7 @@ public class Grid {
             case 4:
                 this.size = 30;
                 setSpeed(1);
+                this.speed = 1;
                 setLevel(4);
                 int[][] temp3 = {
                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -144,6 +144,7 @@ public class Grid {
             case 5:
                 this.size = 30;
                 setSpeed(1);
+                this.speed = 1;
                 setLevel(5);
                 int[][] temp4 = {
                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -184,3 +185,5 @@ public class Grid {
 
     }
 }
+
+

@@ -13,7 +13,7 @@ public class MainController {
 
     @FXML
     public void switchtoReplays() throws IOException {
-        App.setRoot("Replays");
+        App.setRoot("replay");
     }
 
     @FXML
