@@ -41,7 +41,7 @@ public class ReplayController {
     private GraphicsContext gc;
     private Timeline replayLoop;
     private BufferedReader reader;
-    private final int TIME = 80; // Milliseconds between each gametick
+    private final int TIME = 30; // Milliseconds between each gametick, "how fast do you want your replay sir?" 20 seems to be
     private Timeline gameLoop;
     private Snake s;
 
@@ -150,7 +150,7 @@ public class ReplayController {
 
        
     }
- return points;
+return points;
 }
 
 

@@ -7,10 +7,12 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static final int scaler = 1; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+    private static final int scaler = 4; // Adjusts how smooth the movement will be, high for smooth, low for jagged
                                           // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4
                                           // ,really buggy
-                                          // Replaying runs very slow at anything higher than scaler 1, working on it
+                                          // 4 seems to be workin fine on some levels and not so much on others, weird -k
+                                          // 
+                                          // 
     private ArrayList<Circle> snakeBody;
     private int length = 0;
     private static final int STEP = App.size / scaler; // Spacing between each segment
