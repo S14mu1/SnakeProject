@@ -7,8 +7,8 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static final int scaler = 10; // Adjusts how smooth the movement will be, high for smooth, low for jagged
-                                          // ---
+    private static final int scaler = 1; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+                                         // ---
     // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4 ,
     // really buggy
     private ArrayList<Circle> snakeBody;

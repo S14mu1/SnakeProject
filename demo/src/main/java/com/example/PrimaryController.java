@@ -204,14 +204,14 @@ public class PrimaryController {
     // -------------------------- TORUS DEFINITION -------------------------- //
     public void adjustLocation() {
         if (s.getCenterX() < 0) {
-            s.setCenterX(App.w);
+            s.setCenterX(App.w - App.size / 2);
         } else if (s.getCenterX() > App.w) {
-            s.setCenterX(0);
+            s.setCenterX(0 + App.size / 2);
         }
         if (s.getCenterY() < 0) {
-            s.setCenterY(App.h);
+            s.setCenterY(App.h - App.size / 2);
         } else if (s.getCenterY() > App.h) {
-            s.setCenterY(0);
+            s.setCenterY(0 + App.size / 2);
         }
     }
 
