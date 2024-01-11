@@ -36,6 +36,7 @@ public class PrimaryController {
     static String filepath = ("demo\\src\\main\\java\\com\\example\\Replay.txt");
     private Timeline gameLoop;
     private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
+    private ArrayList<Point> replayApple = new ArrayList<Point>();
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -94,6 +95,8 @@ public class PrimaryController {
 
     // Makes the food.
     private void newFood() {
+
+
         int x, y;
         do {
             x = (int) (Math.random() * App.row) * App.size + App.size / 2;
@@ -101,6 +104,7 @@ public class PrimaryController {
         } while (isFoodTooCloseToSnake(x, y) || isFoodOnSnakeHead(x, y) || isFoodTooCloseToLayout(x, y));
 
         food = new Circle(x, y, (App.size / 2) * 0.8);
+        replayApple.add(new Point(x, y));
         food.setFill(Color.AQUAMARINE);
         aPane.getChildren().add(food);
     }
@@ -182,7 +186,7 @@ public class PrimaryController {
 
     private void gameLoopIteration() {
         s.step();
-        // appendTextToFile(filepath, s.getSnakeCoordinates());
+        appendTextToFile(filepath,s.getSnakeCoordinates());
         adjustLocation();
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
@@ -214,11 +218,9 @@ public class PrimaryController {
             s.setCenterY(0 + App.size / 2);
         }
     }
-
-    // -----------------------File
-    // Processing-------------------------------------------------------------------\\
+    //-----------------------File Processing-------------------------------------------------------------------\\
     private static void appendTextToFile(String filePath, ArrayList<Point> array) {
-        String text = ("" + array);
+        String text = (""+array);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(text);
             writer.newLine(); // Writes a new line
