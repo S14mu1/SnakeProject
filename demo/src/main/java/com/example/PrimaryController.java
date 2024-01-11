@@ -1,6 +1,7 @@
 package com.example;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -33,10 +34,10 @@ public class PrimaryController {
     private GraphicsContext gc;
     private int score;
     private final int TIME = 100; // Milliseconds between each gametick
-    static String filepath = ("demo\\src\\main\\java\\com\\example\\Replay.txt");
     private Timeline gameLoop;
     private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
     private ArrayList<Point> replayApple = new ArrayList<Point>();
+    private ArrayList<Point> snakeCoordinates = new ArrayList<Point>();
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -49,6 +50,9 @@ public class PrimaryController {
      */
     // -------------------------- STARTUP -------------------------- //
     private void run(int state) { // Runs when the button is pressed, starts up the game
+        clearFileContent("Replay.txt");
+        clearFileContent("Apple.txt");
+        App.setState(state);
         if (state == 0) {
             int size = 20;
             App.setSize(size);
@@ -95,7 +99,6 @@ public class PrimaryController {
 
     // Makes the food.
     private void newFood() {
-
 
         int x, y;
         do {
@@ -181,13 +184,15 @@ public class PrimaryController {
     private void stopGameLoop() {
         if (gameLoop != null) {
             gameLoop.stop();
+            appendTextToFile("Apple.txt", replayApple);
+            appendTextToFile("Replay.txt", snakeCoordinates);
         }
     }
 
     private void gameLoopIteration() {
         s.step();
-        appendTextToFile(filepath,s.getSnakeCoordinates());
         adjustLocation();
+        snakeCoordinates.add(new Point((int) s.getCenterX(), (int) s.getCenterY()));
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
                 s.eat(food);
@@ -218,14 +223,20 @@ public class PrimaryController {
             s.setCenterY(0 + App.size / 2);
         }
     }
-    //-----------------------File Processing-------------------------------------------------------------------\\
+
+    // -----------------------File
+    // Processing-------------------------------------------------------------------\\
     private static void appendTextToFile(String filePath, ArrayList<Point> array) {
-        String text = (""+array);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(text);
-            writer.newLine(); // Writes a new line
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (int i = 0; i < array.size(); i++) {
+            int x = array.get(i).getX();
+            int y = array.get(i).getY();
+            String text = (x + " " + y);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+                writer.write(text);
+                writer.newLine(); // Writes a new line
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -287,6 +298,7 @@ public class PrimaryController {
     // -------------------------- BUTTONS -------------------------- //
     @FXML
     private void endless() {
+        System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
         run(0);
     }
 
@@ -313,6 +325,16 @@ public class PrimaryController {
     @FXML
     private void fifth() {
         run(5);
+    }
+
+    // Clears contents of file
+    private void clearFileContent(String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+            // Overwrite the file with an empty string
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

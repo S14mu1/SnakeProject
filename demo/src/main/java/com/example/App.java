@@ -19,6 +19,7 @@ public class App extends Application {
     static int h = w;
     static int row = 20;
     static int size = w / row;
+    static int state = 0;
     static Pane root;
 
     @Override
@@ -50,6 +51,10 @@ public class App extends Application {
     static void setSize(int newRow) {
         row = newRow;
         size = w / row;
+    }
+
+    static void setState(int newState) {
+        state = newState;
     }
 
 }

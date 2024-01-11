@@ -7,8 +7,8 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static final int scaler = 1; // Adjusts how smooth the movement will be, high for smooth, low for jagged
-                                         // ---
+    private static final int scaler = 10; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+                                          // ---
     // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4 ,
     // really buggy
     private ArrayList<Circle> snakeBody;
@@ -36,14 +36,6 @@ public class Snake extends Circle {
     public void step() {
         int x = pos.getX();
         int y = pos.getY();
-
-        snakeCoordinates.clear();
-        snakeCoordinates.add(new Point((int) getCenterX(), (int) getCenterY())); // Add the head's new position
-        for (Circle segment : snakeBody) {
-            snakeCoordinates.add(new Point((int) segment.getCenterX(), (int) segment.getCenterY())); // Add body segment
-                                                                                                     // positions
-        }
-
         for (int i = length - 1; i >= 0; i--) {
             if (i == 0) {
                 snakeBody.get(i).setCenterX(getCenterX());
@@ -74,6 +66,21 @@ public class Snake extends Circle {
             x = x + STEP;
         }
         pos.translate(x, y);
+    }
+
+    public void replayStep(double x, double y) {
+        for (int i = length - 1; i >= 0; i--) {
+            if (i == 0) {
+                snakeBody.get(i).setCenterX(getCenterX());
+                snakeBody.get(i).setCenterY(getCenterY());
+            } else {
+                snakeBody.get(i).setCenterX(snakeBody.get(i - 1).getCenterX());
+                snakeBody.get(i).setCenterY(snakeBody.get(i - 1).getCenterY());
+            }
+        }
+
+        setCenterX(x);
+        setCenterY(y);
     }
 
     // -------------------------- COLLISION WITH ITSELF --------------------------
