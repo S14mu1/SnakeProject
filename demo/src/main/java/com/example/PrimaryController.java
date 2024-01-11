@@ -1,5 +1,7 @@
 package com.example;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import javafx.animation.KeyFrame;
@@ -31,6 +33,7 @@ public class PrimaryController {
     private GraphicsContext gc;
     private int score;
     private final int TIME = 100; // Milliseconds between each gametick
+    static String filepath = ("demo\\src\\main\\java\\com\\example\\Replay.txt");
     private Timeline gameLoop;
     private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
 
@@ -44,7 +47,6 @@ public class PrimaryController {
      * Here all the game logic will be this is how the game is controlled
      */
     // -------------------------- STARTUP -------------------------- //
-
     private void run(int state) { // Runs when the button is pressed, starts up the game
         if (state == 0) {
             int size = 20;
@@ -166,8 +168,6 @@ public class PrimaryController {
     // -------------------------- GAME LOOP CODE -------------------------- //
 
     private void startGameLoop(double speed) {
-        stopGameLoop(); // Stop the existing timeline if it's running
-
         KeyFrame frame = new KeyFrame(Duration.millis(TIME / s.getScaler() * speed), e -> gameLoopIteration());
         gameLoop = new Timeline(frame);
         gameLoop.setCycleCount(Timeline.INDEFINITE);
@@ -182,6 +182,7 @@ public class PrimaryController {
 
     private void gameLoopIteration() {
         s.step();
+        appendTextToFile(filepath, s.getSnakeCoordinates());
         adjustLocation();
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
@@ -211,6 +212,18 @@ public class PrimaryController {
             s.setCenterY(App.h);
         } else if (s.getCenterY() > App.h) {
             s.setCenterY(0);
+        }
+    }
+
+    // -----------------------File
+    // Processing-------------------------------------------------------------------\\
+    private static void appendTextToFile(String filePath, ArrayList<Point> array) {
+        String text = ("" + array);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(text);
+            writer.newLine(); // Writes a new line
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -262,7 +275,7 @@ public class PrimaryController {
                 } else {
                     gc.setFill(Color.web("A20751"));
                 }
-                gc.fillRect(j * App.size, i * App.size, App.size, App.size);
+                gc.fillRect(i * App.size + App.size / 2, j * App.size + App.size / 2, App.size, App.size);
             }
 
         }
