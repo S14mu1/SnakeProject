@@ -108,7 +108,7 @@ public class PrimaryController {
 
         food = new Circle(x, y, (App.size / 2) * 0.8);
         replayApple.add(new Point(x, y));
-        food.setFill(Color.AQUAMARINE);
+        food.setFill(Color.web("5BA432"));
         aPane.getChildren().add(food);
     }
 
@@ -224,8 +224,7 @@ public class PrimaryController {
         }
     }
 
-    // -----------------------File
-    // Processing-------------------------------------------------------------------\\
+    // -----------------------File Processing-------------------------------------------------------------------\\
     private static void appendTextToFile(String filePath, ArrayList<Point> array) {
         for (int i = 0; i < array.size(); i++) {
             int x = array.get(i).getX();
@@ -246,16 +245,16 @@ public class PrimaryController {
      */
     @FXML
     void moveSquareKeyPressed(KeyEvent event) throws IOException {
-        if (event.getCode().equals(KeyCode.W) && direction != 1) {
+        if ((event.getCode().equals(KeyCode.W) && direction != 1) || (event.getCode().equals(KeyCode.UP) && direction != 1)) {
             direction = 0;
             s.setCurrentDirection(0);
-        } else if (event.getCode().equals(KeyCode.S) && direction != 0) {
+        } else if ((event.getCode().equals(KeyCode.S) && direction != 0) || (event.getCode().equals(KeyCode.DOWN) && direction != 0)) {
             direction = 1;
             s.setCurrentDirection(1);
-        } else if (event.getCode().equals(KeyCode.A) && direction != 3) {
+        } else if ((event.getCode().equals(KeyCode.A) && direction != 3) ||(event.getCode().equals(KeyCode.LEFT) && direction != 3)) {
             direction = 2;
             s.setCurrentDirection(2);
-        } else if (event.getCode().equals(KeyCode.D) && direction != 2) {
+        } else if ((event.getCode().equals(KeyCode.D) && direction != 2) || (event.getCode().equals(KeyCode.RIGHT) && direction != 2)) {
             direction = 3;
             s.setCurrentDirection(3);
         }
@@ -271,7 +270,7 @@ public class PrimaryController {
                 block = new Rectangle(i * App.size, j * App.size, App.size, App.size);
                 if (g.getLayout()[i][j] == 1) {
                     // Set color or style for the blocks in the grid
-                    block.setFill(Color.web("660431"));
+                    block.setFill(Color.web("5E042D"));
                     aPane.getChildren().add(block);
                     layout.add(block);
                 }
@@ -284,9 +283,9 @@ public class PrimaryController {
         for (int i = -1; i < App.row; i++) {
             for (int j = -1; j < App.row; j++) {
                 if ((i + j) % 2 == 0) {
-                    gc.setFill(Color.web("AA0751"));
+                    gc.setFill(Color.web("8A0641"));
                 } else {
-                    gc.setFill(Color.web("A20751"));
+                    gc.setFill(Color.web("940646"));
                 }
                 gc.fillRect(i * App.size, j * App.size, App.size, App.size);
             }

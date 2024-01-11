@@ -80,7 +80,7 @@ public class ReplayController {
         int x = aScanner.nextInt();
         int y = aScanner.nextInt();
         food = new Circle(x, y, App.size / 2 * 0.8);
-        food.setFill(Color.AQUAMARINE);
+        food.setFill(Color.web("5BA432"));
         aPane.getChildren().add(food);
     }
 
@@ -120,8 +120,6 @@ public class ReplayController {
     private void stopReplay() throws IOException {
         if (replayLoop != null) {
             replayLoop.stop();
-            f.delete();
-            a.delete();
             App.setRoot("mainMenu");
         }
     }
@@ -135,9 +133,9 @@ public class ReplayController {
         for (int i = -1; i < App.row + 1; i++) {
             for (int j = -1; j < App.row + 1; j++) {
                 if ((i + j) % 2 == 0) {
-                    gc.setFill(Color.web("AA0751"));
+                    gc.setFill(Color.web("8A0641"));
                 } else {
-                    gc.setFill(Color.web("A20751"));
+                    gc.setFill(Color.web("940646"));
                 }
                 gc.fillRect(i * App.size, j * App.size, App.size, App.size);
             }
@@ -155,7 +153,7 @@ public class ReplayController {
                 block = new Rectangle(i * App.size, j * App.size, App.size, App.size);
                 if (g.getLayout()[i][j] == 1) {
                     // Set color or style for the blocks in the grid
-                    block.setFill(Color.web("660431"));
+                    block.setFill(Color.web("5E042D"));
                     aPane.getChildren().add(block);
                     layout.add(block);
                 }

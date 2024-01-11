@@ -3,16 +3,25 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="aPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveSquareKeyPressed" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
+<AnchorPane fx:id="aPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveSquareKeyPressed" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #940646;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.PrimaryController">
    <children>
-      <Label layoutX="246.0" layoutY="29.0" style="-fx-font-size: 20px;" text="Play endless" />
-      <Button layoutX="223.0" layoutY="89.0" mnemonicParsing="false" onAction="#endless" prefWidth="150" text="Endless Mode" />
-      <Button layoutX="263.0" layoutY="214.0" mnemonicParsing="false" onAction="#second" prefHeight="25.0" prefWidth="73.0" text="Level 2" />
-      <Label layoutX="254.0" layoutY="157.0" style="-fx-font-size: 20px;" text="Play levels" />
-      <Button layoutX="353.0" layoutY="214.0" mnemonicParsing="false" onAction="#third" prefHeight="25.0" prefWidth="73.0" text="Level 3" />
-      <Button layoutX="172.0" layoutY="214.0" mnemonicParsing="false" onAction="#first" prefHeight="25.0" prefWidth="73.0" text="Level 1" />
-      <Button layoutX="316.0" layoutY="257.0" mnemonicParsing="false" onAction="#fifth" prefHeight="25.0" prefWidth="73.0" text="Level 5" />
-      <Button layoutX="209.0" layoutY="257.0" mnemonicParsing="false" onAction="#fourth" prefHeight="25.0" prefWidth="73.0" text="Level 4" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000038" height="395.0" layoutX="112.0" layoutY="103.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="396.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="395.0" layoutX="102.0" layoutY="93.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="396.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000064" height="48.0" layoutX="219.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="166.0" />
+      <Label layoutX="249.0" layoutY="155.0" style="-fx-font-size: 20px;" text="Play endless" />
+      <Button layoutX="219.0" layoutY="199.0" mnemonicParsing="false" onAction="#endless" prefHeight="48.0" prefWidth="166.0" style="-fx-background-color: #940646;" text="Endless Mode" textFill="WHITE" />
+      <Label layoutX="256.0" layoutY="300.0" style="-fx-font-size: 20px;" text="Play levels" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000064" height="25.0" layoutX="175.0" layoutY="363.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="73.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000064" height="25.0" layoutX="355.0" layoutY="363.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="73.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000064" height="25.0" layoutX="264.0" layoutY="363.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="73.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000064" height="25.0" layoutX="318.0" layoutY="406.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="73.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00000064" height="25.0" layoutX="211.0" layoutY="406.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="73.0" />
+      <Button layoutX="265.0" layoutY="357.0" mnemonicParsing="false" onAction="#second" prefHeight="25.0" prefWidth="73.0" style="-fx-background-color: #940646;" text="Level 2" textFill="WHITE" />
+      <Button layoutX="355.0" layoutY="357.0" mnemonicParsing="false" onAction="#third" prefHeight="25.0" prefWidth="73.0" style="-fx-background-color: #940646;" text="Level 3" textFill="WHITE" />
+      <Button layoutX="174.0" layoutY="357.0" mnemonicParsing="false" onAction="#first" prefHeight="25.0" prefWidth="73.0" style="-fx-background-color: #940646;" text="Level 1" textFill="WHITE" />
+      <Button layoutX="318.0" layoutY="400.0" mnemonicParsing="false" onAction="#fifth" prefHeight="25.0" prefWidth="73.0" style="-fx-background-color: #940646;" text="Level 5" textFill="WHITE" />
+      <Button layoutX="211.0" layoutY="400.0" mnemonicParsing="false" onAction="#fourth" prefHeight="25.0" prefWidth="73.0" style="-fx-background-color: #940646;" text="Level 4" textFill="WHITE" />
    </children>
 </AnchorPane>

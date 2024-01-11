@@ -7,7 +7,7 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static final int scaler = 10; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+    private static final int scaler = 5; // Adjusts how smooth the movement will be, high for smooth, low for jagged
                                           // ---
     // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4 ,
     // really buggy
@@ -108,7 +108,7 @@ public class Snake extends Circle {
         Circle tail = endTail();
         f.setCenterX(tail.getCenterX());
         f.setCenterY(tail.getCenterY());
-        f.setFill(Color.rgb(0, 0 + c * 3, 0 + c * 3));
+        f.setFill(Color.rgb(0 + c, 0 + c * 3, 0 + c / 2));
         snakeBody.add(length++, f);
         colorChange++;
 
