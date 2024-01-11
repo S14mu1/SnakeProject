@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -47,32 +48,36 @@ public class PrimaryController {
      * Here all the game logic will be this is how the game is controlled
      */
     // -------------------------- STARTUP -------------------------- //
-    @FXML
-    private void run() { // Runs when the button is pressed, starts up the game
-        aPane.getChildren().add(canvas);
-        gc = canvas.getGraphicsContext2D();
-        Grid g = new Grid();
-        g.setLayout(3);
-        App.setSize(g.getSize());
-        drawBackground(gc);
-        drawLevel(g.getLevel()); // Assuming level 1 for now, you can pass the appropriate level parameter
-        newSnake(g);
-        newFood();
-        canvas.requestFocus(); // Ensure that the Canvas has focus
-        startGameLoop(g.getSpeed());
-        try (FileWriter writer = new FileWriter(filepath, false)) { // false to overwrite
-            writer.write(""); // Writing an empty string to clear the file
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void run(int state) { // Runs when the button is pressed, starts up the game
+        if (state == 0) {
+            int size = 20;
+            App.setSize(size);
+            aPane.getChildren().add(canvas);
+            gc = canvas.getGraphicsContext2D();
+            drawBackground(gc);
+            newSnake(state);
+            newFood();
+            canvas.requestFocus(); // Ensure that the Canvas has focus
+            startGameLoop(1);
 
+        } else {
+            aPane.getChildren().add(canvas);
+            gc = canvas.getGraphicsContext2D();
+            Grid g = new Grid();
+            g.setLayout(state);
+            App.setSize(g.getSize());
+            drawBackground(gc);
+            drawLevel(g.getLevel()); // Assuming level 1 for now, you can pass the appropriate level parameter
+            newSnake(state);
+            newFood();
+            canvas.requestFocus(); // Ensure that the Canvas has focus
+            startGameLoop(g.getSpeed());
+        }
     }
 
-    public void newSnake(Grid g) {
-        int level = g.getLevel();
-        System.out.println(level);
+    public void newSnake(int state) {
         if (App.row % 2 == 0) {
-            if (level == 2 || level == 4 || level == 5) {
+            if (state == 2 || state == 4 || state == 5) {
                 s = new Snake(1 * App.size + App.size / 2, 1 * App.size + App.size / 2, App.size / 2 * 0.90);
             } else {
                 s = new Snake(App.w / 2 + App.size / 2, App.h / 2 + App.size / 2, App.size / 2 * 0.90);
@@ -182,7 +187,6 @@ public class PrimaryController {
     private void gameLoopIteration() {
         s.step();
         appendTextToFile(filepath,s.getSnakeCoordinates());
-        
         adjustLocation();
         if (hit()) {
             for (int i = 0; i < s.getScaler(); i++) {
@@ -215,7 +219,15 @@ public class PrimaryController {
         }
     }
     //-----------------------File Processing-------------------------------------------------------------------\\
-    
+    private static void appendTextToFile(String filePath, ArrayList<Point> array) {
+        String text = (""+array);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(text);
+            writer.newLine(); // Writes a new line
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // -------------------------- MOVEMENT -------------------------- //
     /*
@@ -245,7 +257,7 @@ public class PrimaryController {
 
         for (int i = 0; i < g.getLayout().length; i++) {
             for (int j = 0; j < g.getLayout()[i].length; j++) {
-                block = new Rectangle(j * App.size, i * App.size, App.size, App.size);
+                block = new Rectangle(i * App.size, j * App.size, App.size, App.size);
                 if (g.getLayout()[i][j] == 1) {
                     // Set color or style for the blocks in the grid
                     block.setFill(Color.web("660431"));
@@ -265,11 +277,42 @@ public class PrimaryController {
                 } else {
                     gc.setFill(Color.web("A20751"));
                 }
-                gc.fillRect(j * App.size, i * App.size, App.size, App.size);
+                gc.fillRect(i * App.size, j * App.size, App.size, App.size);
             }
 
         }
 
+    }
+
+    // -------------------------- BUTTONS -------------------------- //
+    @FXML
+    private void endless() {
+        run(0);
+    }
+
+    @FXML
+    private void first() {
+        run(1);
+    }
+
+    @FXML
+    private void second() {
+        run(2);
+    }
+
+    @FXML
+    private void third() {
+        run(3);
+    }
+
+    @FXML
+    private void fourth() {
+        run(4);
+    }
+
+    @FXML
+    private void fifth() {
+        run(5);
     }
 
 }

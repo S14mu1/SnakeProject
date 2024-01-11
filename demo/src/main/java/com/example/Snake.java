@@ -7,22 +7,19 @@ import java.util.*;
 public class Snake extends Circle {
 
     // -------------------------- VARIABLES -------------------------- //
-    private static final int scaler = 4; // Adjusts how smooth the movement will be, high for smooth, low for jagged
+    private static final int scaler = 1; // Adjusts how smooth the movement will be, high for smooth, low for jagged
                                           // MAX 20 MIN 1 - Pick between 15 and 30 for best experience -- Do not pick 4
                                           // ,really buggy
-                                          // 4 seems to be workin fine on some levels and not so much on others, weird -k
-                                          // 
-                                          // 
+                                          // Replaying runs very slow at anything higher than scaler 1, working on it
     private ArrayList<Circle> snakeBody;
     private int length = 0;
-    private static final int STEP = App.size / scaler; // Spacing between each segment
+    private int STEP = App.size / scaler; // Spacing between each segment
     private int currentDirection;
     private Point pos;
     private int bufferedDirection = 0;
     private int colorChange = 0;
     private int c = 0;
     private ArrayList<Point> snakeCoordinates;
-
 
     // -------------------------- CONSTRUCTOR USES CIRCLE SUPERCLASS
     // -------------------------- //
@@ -40,10 +37,11 @@ public class Snake extends Circle {
         int x = pos.getX();
         int y = pos.getY();
 
-        snakeCoordinates.clear(); 
-        snakeCoordinates.add(new Point((int)getCenterX(), (int)getCenterY())); // Add the head's new position
+        snakeCoordinates.clear();
+        snakeCoordinates.add(new Point((int) getCenterX(), (int) getCenterY())); // Add the head's new position
         for (Circle segment : snakeBody) {
-            snakeCoordinates.add(new Point((int)segment.getCenterX(), (int)segment.getCenterY())); // Add body segment positions
+            snakeCoordinates.add(new Point((int) segment.getCenterX(), (int) segment.getCenterY())); // Add body segment
+                                                                                                     // positions
         }
 
         for (int i = length - 1; i >= 0; i--) {
@@ -150,7 +148,9 @@ public class Snake extends Circle {
     public int getScaler() {
         return scaler;
     }
+
     public ArrayList<Point> getSnakeCoordinates() {
         return snakeCoordinates;
     }
+
 }

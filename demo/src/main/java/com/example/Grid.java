@@ -31,12 +31,17 @@ public class Grid {
         this.level = level;
     }
 
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
     public void setLayout(int level) {
 
         switch (level) {
             case 1:
                 this.size = 5;
-                this.speed = 2;
+                setSpeed(2);
+                ;
                 setLevel(1);
                 int[][] temp = {
                         { 1, 0, 0, 0, 1 },
@@ -50,7 +55,7 @@ public class Grid {
 
             case 2:
                 this.size = 10;
-                this.speed = 1.5;
+                setSpeed(1.5);
                 setLevel(2);
                 int[][] temp1 = {
                         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -69,7 +74,7 @@ public class Grid {
 
             case 3:
                 this.size = 20;
-                this.speed = 1.2;
+                setSpeed(1.2);
                 setLevel(3);
                 int[][] temp2 = {
                         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -98,6 +103,7 @@ public class Grid {
 
             case 4:
                 this.size = 30;
+                setSpeed(1);
                 this.speed = 1;
                 setLevel(4);
                 int[][] temp3 = {
@@ -137,6 +143,7 @@ public class Grid {
 
             case 5:
                 this.size = 30;
+                setSpeed(1);
                 this.speed = 1;
                 setLevel(5);
                 int[][] temp4 = {
@@ -178,3 +185,5 @@ public class Grid {
 
     }
 }
+
+
