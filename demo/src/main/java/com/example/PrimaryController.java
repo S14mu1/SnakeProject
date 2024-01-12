@@ -42,8 +42,8 @@ public class PrimaryController {
     private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
     private ArrayList<Point> replayApple = new ArrayList<Point>();
     private ArrayList<Point> snakeCoordinates = new ArrayList<Point>();
-    private Image scorenImage = new Image("/scoren.png");
-    private Image pngImage = new Image("/scoren.png");
+    private static Image scorenImage = new Image("/scoren.png");
+    private static Image pngImage = new Image("/scoren.png");
     private ImageView scorenImageView = new ImageView(scorenImage);
     private ImageView pngImageView = new ImageView(pngImage);
 

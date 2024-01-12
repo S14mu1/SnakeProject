@@ -108,7 +108,7 @@ public class Snake extends Circle {
         Circle tail = endTail();
         f.setCenterX(tail.getCenterX());
         f.setCenterY(tail.getCenterY());
-        f.setFill(Color.rgb(0 + c, 0 + c * 3, 0 + c / 2));
+        f.setFill(Color.rgb(0 + c / 2, 0 + c, 0 + c / 2));
         snakeBody.add(length++, f);
         colorChange++;
 
