@@ -54,6 +54,7 @@ public class App extends Application {
         size = w / row;
     }
 
+    // test
     static void setState(int newState) {
         state = newState;
     }
