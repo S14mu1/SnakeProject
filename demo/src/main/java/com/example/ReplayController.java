@@ -24,7 +24,7 @@ public class ReplayController {
     private Rectangle block;
     private Timeline replayLoop;
     private Snake s;
-    private final int TIME = 30; // Milliseconds between each gametick, "how fast do you want your replay sir?"
+    private final int TIME = 20; // Milliseconds between each gametick, "how fast do you want your replay sir?"
     private Circle food;
     private File f = new File("Replay.txt");
     private File a = new File("Apple.txt");
