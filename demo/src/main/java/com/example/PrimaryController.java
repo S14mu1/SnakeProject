@@ -11,6 +11,8 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +21,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class PrimaryController {
@@ -27,6 +30,7 @@ public class PrimaryController {
     private AnchorPane aPane;
     private Circle food;
     private Rectangle block;
+    private Text scoreTxt;
     private Random r = new Random(); // Used in foods position
     private Snake s;
     private int direction;
@@ -38,6 +42,10 @@ public class PrimaryController {
     private ArrayList<Rectangle> layout = new ArrayList<Rectangle>();
     private ArrayList<Point> replayApple = new ArrayList<Point>();
     private ArrayList<Point> snakeCoordinates = new ArrayList<Point>();
+    private Image scorenImage = new Image("/scoren.png");
+    private Image pngImage = new Image("/scoren.png");
+    private ImageView scorenImageView = new ImageView(scorenImage);
+    private ImageView pngImageView = new ImageView(pngImage);
 
     @FXML
     private void switchToSecondary() throws IOException {
@@ -61,6 +69,11 @@ public class PrimaryController {
             drawBackground(gc);
             newSnake(state);
             newFood();
+            gc.drawImage(scorenImage, 2, -50, 250, 120);
+            scoreTxt = new Text(130, 47, score + "");
+            scoreTxt.setFont(Font.font("Cooper Black", FontWeight.BOLD, 30));
+            scoreTxt.setFill(Color.web("42ED47"));
+            aPane.getChildren().add(scoreTxt);
             canvas.requestFocus(); // Ensure that the Canvas has focus
             startGameLoop(1);
 
@@ -74,8 +87,10 @@ public class PrimaryController {
             drawLevel(g.getLevel()); // Assuming level 1 for now, you can pass the appropriate level parameter
             newSnake(state);
             newFood();
+            gc.drawImage(scorenImage, 2, -50, 250, 120);
             canvas.requestFocus(); // Ensure that the Canvas has focus
             startGameLoop(g.getSpeed());
+
         }
     }
 
@@ -152,9 +167,6 @@ public class PrimaryController {
     // Collision between food and snake
     private boolean hit() {
         boolean isHit = food.intersects(s.getBoundsInLocal());
-        if (isHit) {
-            score++;
-        }
         return isHit;
     }
 
@@ -178,12 +190,14 @@ public class PrimaryController {
         KeyFrame frame = new KeyFrame(Duration.millis(TIME / s.getScaler() * speed), e -> gameLoopIteration());
         gameLoop = new Timeline(frame);
         gameLoop.setCycleCount(Timeline.INDEFINITE);
+
         gameLoop.play();
     }
 
     private void stopGameLoop() {
         if (gameLoop != null) {
             gameLoop.stop();
+            App.setReplay(true);
             appendTextToFile("Apple.txt", replayApple);
             appendTextToFile("Replay.txt", snakeCoordinates);
         }
@@ -194,10 +208,15 @@ public class PrimaryController {
         adjustLocation();
         snakeCoordinates.add(new Point((int) s.getCenterX(), (int) s.getCenterY()));
         if (hit()) {
+            score++;
+            scoreTxt.setText(score + "");
+            // gc.setFill(Color.web("42ED47"));
+            // gc.setFont(Font.font("Cooper Black", FontWeight.BOLD, 30));
+            // gc.fillText("" + score, 130, 50);
+
             for (int i = 0; i < s.getScaler(); i++) {
                 s.eat(food);
                 newFood();
-                score++;
             }
         }
         if (gameover()) {
@@ -208,6 +227,7 @@ public class PrimaryController {
                 e.printStackTrace();
             }
         }
+
     }
 
     // -------------------------- TORUS DEFINITION -------------------------- //
@@ -224,7 +244,8 @@ public class PrimaryController {
         }
     }
 
-    // -----------------------File Processing-------------------------------------------------------------------\\
+    // -----------------------File
+    // Processing-------------------------------------------------------------------\\
     private static void appendTextToFile(String filePath, ArrayList<Point> array) {
         for (int i = 0; i < array.size(); i++) {
             int x = array.get(i).getX();
@@ -245,16 +266,20 @@ public class PrimaryController {
      */
     @FXML
     void moveSquareKeyPressed(KeyEvent event) throws IOException {
-        if ((event.getCode().equals(KeyCode.W) && direction != 1) || (event.getCode().equals(KeyCode.UP) && direction != 1)) {
+        if ((event.getCode().equals(KeyCode.W) && direction != 1)
+                || (event.getCode().equals(KeyCode.UP) && direction != 1)) {
             direction = 0;
             s.setCurrentDirection(0);
-        } else if ((event.getCode().equals(KeyCode.S) && direction != 0) || (event.getCode().equals(KeyCode.DOWN) && direction != 0)) {
+        } else if ((event.getCode().equals(KeyCode.S) && direction != 0)
+                || (event.getCode().equals(KeyCode.DOWN) && direction != 0)) {
             direction = 1;
             s.setCurrentDirection(1);
-        } else if ((event.getCode().equals(KeyCode.A) && direction != 3) ||(event.getCode().equals(KeyCode.LEFT) && direction != 3)) {
+        } else if ((event.getCode().equals(KeyCode.A) && direction != 3)
+                || (event.getCode().equals(KeyCode.LEFT) && direction != 3)) {
             direction = 2;
             s.setCurrentDirection(2);
-        } else if ((event.getCode().equals(KeyCode.D) && direction != 2) || (event.getCode().equals(KeyCode.RIGHT) && direction != 2)) {
+        } else if ((event.getCode().equals(KeyCode.D) && direction != 2)
+                || (event.getCode().equals(KeyCode.RIGHT) && direction != 2)) {
             direction = 3;
             s.setCurrentDirection(3);
         }
@@ -334,6 +359,12 @@ public class PrimaryController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Button back
+    @FXML
+    private void switchToMain() throws IOException {
+        App.setRoot("mainMenu");
     }
 
 }

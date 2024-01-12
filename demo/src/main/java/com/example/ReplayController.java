@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class ReplayController {
@@ -21,6 +22,8 @@ public class ReplayController {
     Canvas canvas = new Canvas(App.w, App.h);
     @FXML
     private GraphicsContext gc;
+    @FXML
+    private Text errTxt;
     private Rectangle block;
     private Timeline replayLoop;
     private Snake s;
@@ -34,27 +37,31 @@ public class ReplayController {
 
     @FXML
     private void run() throws FileNotFoundException {
-        if (App.state == 0) {
-            scanner = new Scanner(f);
-            aScanner = new Scanner(a);
-            aPane.getChildren().add(canvas); // begins the replay
-            gc = canvas.getGraphicsContext2D();
-            drawBackground(gc);
-            newSnake(0, aScanner);
-            newFood(aScanner);
-            startReplayLoop(scanner, aScanner);
+        if (App.replay == true) {
+            if (App.state == 0) {
+                scanner = new Scanner(f);
+                aScanner = new Scanner(a);
+                aPane.getChildren().add(canvas); // begins the replay
+                gc = canvas.getGraphicsContext2D();
+                drawBackground(gc);
+                newSnake(0, aScanner);
+                newFood(aScanner);
+                startReplayLoop(scanner, aScanner);
+            } else {
+                scanner = new Scanner(f);
+                aScanner = new Scanner(a);
+                Grid g = new Grid();
+                g.setLayout(App.state);
+                aPane.getChildren().add(canvas); // begins the replay
+                gc = canvas.getGraphicsContext2D();
+                drawBackground(gc);
+                drawLevel(App.state);
+                newSnake(0, aScanner);
+                newFood(aScanner);
+                startReplayLoop(scanner, aScanner);
+            }
         } else {
-            scanner = new Scanner(f);
-            aScanner = new Scanner(a);
-            Grid g = new Grid();
-            g.setLayout(App.state);
-            aPane.getChildren().add(canvas); // begins the replay
-            gc = canvas.getGraphicsContext2D();
-            drawBackground(gc);
-            drawLevel(App.state);
-            newSnake(0, aScanner);
-            newFood(aScanner);
-            startReplayLoop(scanner, aScanner);
+            errTxt.setVisible(true);
         }
     }
 
@@ -159,5 +166,10 @@ public class ReplayController {
                 }
             }
         }
+    }
+
+    @FXML
+    private void switchToMain() throws IOException {
+        App.setRoot("mainMenu");
     }
 }

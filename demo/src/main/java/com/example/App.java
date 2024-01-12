@@ -20,6 +20,7 @@ public class App extends Application {
     static int row = 20;
     static int size = w / row;
     static int state = 0;
+    static boolean replay = false;
     static Pane root;
 
     @Override
@@ -55,6 +56,10 @@ public class App extends Application {
 
     static void setState(int newState) {
         state = newState;
+    }
+
+    static void setReplay(boolean f) {
+        replay = f;
     }
 
 }

@@ -3,7 +3,6 @@ package com.example;
 public class Grid {
     private int size;
     private int level;
-    private int apples;
     private double speed;
     private int[][] layout;
 
@@ -44,11 +43,11 @@ public class Grid {
                 ;
                 setLevel(1);
                 int[][] temp = {
-                        { 1, 0, 0, 0, 1 },
+                        { 0, 0, 0, 0, 1 },
                         { 0, 0, 0, 0, 0 },
                         { 0, 0, 0, 0, 0 },
                         { 0, 0, 0, 0, 0 },
-                        { 1, 0, 0, 0, 1, }
+                        { 1, 0, 0, 0, 0, }
                 };
                 layout = temp;
                 break;
@@ -185,5 +184,3 @@ public class Grid {
 
     }
 }
-
-
