@@ -88,6 +88,10 @@ public class PrimaryController {
             newSnake(state);
             newFood();
             gc.drawImage(scorenImage, 2, -50, 250, 120);
+            scoreTxt = new Text(130, 47, score + "");
+            scoreTxt.setFont(Font.font("Cooper Black", FontWeight.BOLD, 30));
+            scoreTxt.setFill(Color.web("42ED47"));
+            aPane.getChildren().add(scoreTxt);
             canvas.requestFocus(); // Ensure that the Canvas has focus
             startGameLoop(g.getSpeed());
 
