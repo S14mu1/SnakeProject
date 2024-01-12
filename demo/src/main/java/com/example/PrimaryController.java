@@ -210,10 +210,6 @@ public class PrimaryController {
         if (hit()) {
             score++;
             scoreTxt.setText(score + "");
-            // gc.setFill(Color.web("42ED47"));
-            // gc.setFont(Font.font("Cooper Black", FontWeight.BOLD, 30));
-            // gc.fillText("" + score, 130, 50);
-
             for (int i = 0; i < s.getScaler(); i++) {
                 s.eat(food);
                 newFood();
